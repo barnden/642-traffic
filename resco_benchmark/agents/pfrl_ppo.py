@@ -30,7 +30,7 @@ class IPPO(IndependentAgent):
             obs_space = obs_act[key][0]
             act_space = obs_act[key][1]
             self.agents[key] = PFRLPPOAgent(config, obs_space, act_space)
-            if self.config['load']:
+            if 'load' in self.config:
                 print('LOADING SAVED MODEL FOR EVALUATION')
                 self.agents[key].load(self.config['log_dir']+'agent_'+key+'.pt')
                 self.agents[key].agent.training = False

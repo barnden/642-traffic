@@ -5,7 +5,7 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-log_dir = os.path.join(os.path.dirname(os.path.dirname(os.getcwd())), 'results' + os.sep)
+log_dir = os.path.join(os.path.dirname(os.path.dirname(os.getcwd())), 'results3' + os.sep)
 env_base = '..'+os.sep+'environments'+os.sep
 names = [folder for folder in next(os.walk(log_dir))[1]]
 
@@ -71,7 +71,11 @@ for run_name in run_avg:
 
     plt.title(run_name)
     plt.plot(avg_delays)
-    plt.show()
+    # plt.show()
+    print(metric, len(avg_delays), run_name, avg_delays[-1] if len(avg_delays) else avg_delays, min(avg_delays) if len(avg_delays) else avg_delays)
+
+print()
+
 
 
 np.set_printoptions(threshold=sys.maxsize)

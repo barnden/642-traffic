@@ -15,13 +15,15 @@ agent_configs = {
         'agent': MAXWAVE,
         'state': states.wave,
         'reward': rewards.wait,
-        'max_distance': 50
+        'max_distance': 50,
+        'save_freq': 25
     },
     'MAXPRESSUREVAL': {
         'agent': MAXPRESSURE,
         'state': states.mplight,
         'reward': rewards.wait,
-        'max_distance': 9999
+        'max_distance': 9999,
+        'save_freq': 25
     },
     'MPLightVAL': {
         'agent': MPLight,
@@ -34,7 +36,8 @@ agent_configs = {
         'EPS_END': 0.0,
         'EPS_DECAY': 220,
         'TARGET_UPDATE': 500,
-        'demand_shape': 1
+        'demand_shape': 1,
+        'save_freq': 25
     },
     'FMA2CVAL': {
         'agent': FMA2C,
@@ -60,48 +63,34 @@ agent_configs = {
         'batch_size': 120,
         'reward_norm': 2000.0,
         'reward_clip': 2.0,
+        'save_freq': 25
     },
 
     'STOCHASTIC': {
         'agent': STOCHASTIC,
         'state': states.mplight,
         'reward': rewards.wait,
-        'max_distance': 1
+        'max_distance': 1,
+        'save_freq': 25
     },
     'MAXWAVE': {
         'agent': MAXWAVE,
         'state': states.wave,
         'reward': rewards.wait,
-        'max_distance': 50
+        'max_distance': 50,
+        'save_freq': 25
     },
     'MAXPRESSURE': {
         'agent': MAXPRESSURE,
         'state': states.mplight,
         'reward': rewards.wait,
-        'max_distance': 200
+        'max_distance': 200,
+        'save_freq': 25
     },
     'IDQN': {
         'agent': IDQN,
         'state': states.drq_norm,
-        'reward': rewards.wait_norm,
-        'max_distance': 200,
-        'BATCH_SIZE': 32,
-        'GAMMA': 0.99,
-        'EPS_START': 1.0,
-        'EPS_END': 0.0,
-        'EPS_DECAY': 220,
-        'TARGET_UPDATE': 500
-    },
-    'IPPO': {
-        'agent': IPPO,
-        'state': states.drq_norm,
-        'reward': rewards.wait_norm,
-        'max_distance': 200
-    },
-    'MPLight': {
-        'agent': MPLight,
-        'state': states.mplight,
-        'reward': rewards.pressure,
+        'reward': rewards.wait,
         'max_distance': 200,
         'BATCH_SIZE': 32,
         'GAMMA': 0.99,
@@ -109,7 +98,28 @@ agent_configs = {
         'EPS_END': 0.0,
         'EPS_DECAY': 220,
         'TARGET_UPDATE': 500,
-        'demand_shape': 1
+        'save_freq': 25
+    },
+    'IPPO': {
+        'agent': IPPO,
+        'state': states.drq_norm,
+        'reward': rewards.wait_norm,
+        'max_distance': 200,
+        'save_freq': 25
+    },
+    'MPLight': {
+        'agent': MPLight,
+        'state': states.mplight,
+        'reward': rewards.sqe_queue_length,
+        'max_distance': 200,
+        'BATCH_SIZE': 32,
+        'GAMMA': 0.99,
+        'EPS_START': 1.0,
+        'EPS_END': 0.0,
+        'EPS_DECAY': 220,
+        'TARGET_UPDATE': 500,
+        'demand_shape': 1,
+        'save_freq': 25,
     },
     'FMA2C': {
         'agent': FMA2C,
@@ -149,7 +159,8 @@ agent_configs = {
         'EPS_END': 0.0,
         'EPS_DECAY': 220,
         'TARGET_UPDATE': 500,
-        'demand_shape': 4
+        'demand_shape': 4,
+        'save_freq': 25
     },
     'FMA2CFULL': {
         'agent': FMA2C,

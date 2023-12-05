@@ -9,7 +9,7 @@ matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
 
-log_dir = os.path.join(os.path.dirname(os.path.dirname(os.getcwd())), 'results' + os.sep)
+log_dir = os.path.join(os.path.dirname(os.path.dirname(os.getcwd())), 'results3' + os.sep)
 env_base = '..'+os.sep+'environments'+os.sep
 names = [folder for folder in next(os.walk(log_dir))[1]]
 
@@ -103,11 +103,14 @@ for metric in metrics:
         alg_name.append(run_name+'_yerr')
         alg_res.append(err)
 
-        plt.title(run_name)
-        plt.plot(avg_delays)
-        plt.show()
+        # plt.title(run_name)
+        # plt.plot(avg_delays)
+        # plt.show()
 
 
+        print(metric, len(avg_delays), run_name, avg_delays[-1] if len(avg_delays) else avg_delays, min(avg_delays) if len(avg_delays) else avg_delays)
+
+    print()
     np.set_printoptions(threshold=sys.maxsize)
     with open(output_file, 'a') as out:
         for i, res in enumerate(alg_res):

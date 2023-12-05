@@ -1,7 +1,7 @@
 import numpy as np
 
 from resco_benchmark.config.mdp_config import mdp_configs
-
+import math
 
 def wait(signals):
     rewards = dict()
@@ -24,6 +24,103 @@ def wait_norm(signals):
         rewards[signal_id] = np.clip(-total_wait/224, -4, 4).astype(np.float32)
     return rewards
 
+def wait_square(signals):
+    rewards = dict()
+    for signal_id in signals:
+        total_wait = 0
+        for lane in signals[signal_id].lanes:
+            total_wait += signals[signal_id].full_observation[lane]['total_wait'] ** 2
+
+        rewards[signal_id] = np.clip(-total_wait/224, -4, 4).astype(np.float32)
+    return rewards
+
+
+def queue_length(signals):
+    rewards = dict()
+    for id, signal in signals.items():
+        queue_length = 0
+
+        for lane in signal.lanes:
+            queue_length += signal.full_observation[lane]['queue']
+
+        rewards[id] = -queue_length
+
+    return rewards
+
+
+def sq_queue_length(signals):
+    rewards = dict()
+    for id, signal in signals.items():
+        queue_length = 0
+
+        for lane in signal.lanes:
+            queue_length += signal.full_observation[lane]['queue']
+
+        rewards[id] = -(queue_length ** 2)
+
+    return rewards
+
+
+def sqe_queue_length(signals):
+    rewards = dict()
+    for id, signal in signals.items():
+        queue_length = 0
+
+        for lane in signal.lanes:
+            queue_length += signal.full_observation[lane]['queue'] ** 2
+
+        rewards[id] = -queue_length
+
+    return rewards
+
+
+def hm_queue_length(signals):
+    rewards = dict()
+    for id, signal in signals.items():
+        queue_length = 0
+
+        for lane in signal.lanes:
+            queue_length += (signal.full_observation[lane]['queue'])
+
+        if queue_length != 0:
+            reward = -(queue_length / len(signal.lanes)) ** -1
+        else:
+            reward = 0
+
+        rewards[id] = math.exp(reward)
+
+    return rewards
+
+
+def pressure_norm(signals):
+    rewards = dict()
+    for signal_id in signals:
+        queue_length = 0
+        for lane in signals[signal_id].lanes:
+            queue_length += signals[signal_id].full_observation[lane]['queue']
+
+        for lane in signals[signal_id].outbound_lanes:
+            dwn_signal = signals[signal_id].out_lane_to_signalid[lane]
+            if dwn_signal in signals[signal_id].signals:
+                queue_length -= signals[signal_id].signals[dwn_signal].full_observation[lane]['queue']
+
+        rewards[signal_id] = np.clip(-queue_length/224, -4, 4).astype(np.float32)
+    return rewards
+
+def pressure_square(signals):
+    rewards = dict()
+    for signal_id in signals:
+        queue_length = 0
+        for lane in signals[signal_id].lanes:
+            queue_length += (signals[signal_id].full_observation[lane]['queue']) ** 2
+
+        for lane in signals[signal_id].outbound_lanes:
+            dwn_signal = signals[signal_id].out_lane_to_signalid[lane]
+            if dwn_signal in signals[signal_id].signals:
+                queue_length -= (signals[signal_id].signals[dwn_signal].full_observation[lane]['queue']) ** 2
+
+        rewards[signal_id] = -queue_length
+    return rewards
 
 def pressure(signals):
     rewards = dict()

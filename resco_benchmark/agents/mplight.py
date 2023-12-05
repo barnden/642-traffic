@@ -34,7 +34,7 @@ class MPLight(SharedAgent):
         self.valid_acts = signal_configs[map_name]['valid_acts']
         model = FRAP(config, num_actions, phase_pairs, comp_mask, self.device)
         self.agent = DQNAgent(config, num_actions, model, num_agents=config['num_lights'])
-        if self.config['load']:
+        if 'load' in self.config:
             print('LOADING SAVED MODEL FOR EVALUATION')
             self.agent.load(self.config['log_dir'] + 'agent.pt')
             self.agent.agent.training = False
