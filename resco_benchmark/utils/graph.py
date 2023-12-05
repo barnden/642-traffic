@@ -1,6 +1,6 @@
 import matplotlib.pyplot as plt
 import numpy as np
-from collections import deque
+from collections import deque, defaultdict
 
 from avg_timeLoss import delays
 from avg_duration import durations
@@ -31,11 +31,20 @@ alg_name = {
     'IPPO': 'IPPO'
 }
 
+reward_name = defaultdict(str)
+
+reward_name |= {
+    "wait": "Wait-Time",
+    "wait_square": "Wait-Squared*",
+    "pressure": "Pressure",
+    "sqe_queue_length": "Queue-Squared*"
+}
+
 statics = ['MAXPRESSURE', 'STOCHASTIC', 'MAXWAVE', 'FIXED']
 
 num_n = -1
-num_episodes = 120
-fs = 21
+num_episodes = 100
+fs = 13
 window_size = 5
 
 metrics = [delays, durations, waiting, queue]
@@ -83,8 +92,9 @@ for met_i, metric in enumerate(metrics):
         plt.gca().set_prop_cycle(None)
         for key in metric:
             if map in key and '_yerr' not in key:
-                alg = key.split(' ')[0]
-                key_map = key.split(' ')[1]
+                alg = key.split()[0]
+                key_map = key.split()[1]
+                reward = reward_name[key.split()[-1]]
 
                 if alg == 'IDQN': dqn_max = np.max(metric[key])     # Set ylim to DQN max, it's approx. random perf.
 
@@ -112,10 +122,10 @@ for met_i, metric in enumerate(metrics):
 
                 # Print stats
                 if alg in statics:
-                    print('{} {}'.format(alg_name[alg], avg_tot))
+                    print('{} {} {}'.format(alg_name[alg], reward, avg_tot))
                     do_nothing = 0
                 else:
-                    print('{} {} +- {}'.format(alg_name[alg], last_n, last_n_err))
+                    print('{} {} {} +- {}'.format(alg_name[alg], reward, last_n, last_n_err))
                     if not(map == 'grid4x4' or map == 'arterial4x4'):
                         chart[alg_name[alg]][metrics_str[met_i]].append(str(last_n)) #+' $\pm$ '+str(last_n_err)
 
@@ -147,7 +157,7 @@ for met_i, metric in enumerate(metrics):
                         low = windowed
                         high = windowed
 
-                    plt.plot(windowed, label=alg_name[alg])
+                    plt.plot(windowed, label=f'{alg_name[alg]} {reward}')
                     plt.fill_between(x, low, high, alpha=0.4)
                 else:
                     if alg == 'FMA2C':  # Skip pink in color cycle
@@ -159,14 +169,14 @@ for met_i, metric in enumerate(metrics):
                     plt.plot(x, y, label=alg_name[alg])
                     plt.fill_between([], [], [])  # Advance color cycle
 
-        points = np.asarray([0, 20, 40, 60, 80, 100, num_episodes])
-        labels = ('0', '20', '40', '60', '80', '100', '..1400')
+        points = np.asarray([0, 20, 40, 60, 80, 100])
+        labels = ('0', '20', '40', '60', '80', '100')
         plt.yticks(fontsize=fs)
         plt.xticks(points, labels, fontsize=fs)
-        #plt.xlabel('Episode', fontsize=32)
-        #plt.ylabel('Delay (s)', fontsize=32)
+        plt.xlabel('Episode', fontsize=fs*1.25)
+        plt.ylabel('Delay (s)', fontsize=fs*1.25)
         plt.title(map_title[map], fontsize=fs)
-        #plt.legend(prop={'size': 25})
+        plt.legend(prop={'size': fs / 1.25})
         bot, top = plt.ylim()
         if bot < 0: bot = 0
         plt.ylim(bot, dqn_max)
