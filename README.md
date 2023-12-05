@@ -1,3 +1,22 @@
+# Project
+This repo is a fork of the original RESCO codebase.
+
+## Running
+As our project delt primarily with reward functions, the instructions to install and run are the same as the original RESCO code.
+1. Ensure you are using a Python version less than 3.9
+2. Install SUMO and ensure SUMO_HOME environment variable is set
+3. Run `pip install .` in the root repo directory
+4. Enter `resco_benchamark` and run the training command
+
+Example, to run Ingolstadt region using IDQN with 4 trials:
+`python main.py --agent IDQN --map ingolstadt21 --procs 4 --trials 4`
+
+To change reward functions update the `agent_config.py` file, and rerun `pip install .` to apply changes.
+
+Data and graphs can be extracted using the provided files located under `resco_benchmark/utils`.
+
+Below is the original README which includes more detailed instructions.
+
 # RESCO
 ![Alt text](maps.png?raw=true "Provided SUMO scenarios")
 
